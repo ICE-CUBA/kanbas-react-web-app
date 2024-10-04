@@ -6,12 +6,11 @@ export default function ModulesControls() {
             <button id="wd-add-module-btn" className="btn btn-lg btn-danger me-1 float-end">
                 <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
                 Module</button>
-            <div className="dropdown d-inline me-1 float-end">
+            <div className=" d-inline me-1 float-end">
                 <button id="wd-publish-all-btn" className="btn btn-lg btn-secondary dropdown-toggle"
-                 data-bs-toggle="dropdown" aria-expanded="false">
-                        <GreenCheckmark />
-                        Publish All
-                </button>
+                    type="button" data-bs-toggle="dropdown">
+                    <GreenCheckmark />
+                    Publish All</button>
                 <ul className="dropdown-menu">
                     <li>
                         <a id="wd-publish-all-modules-and-items-btn" className="dropdown-item" href="#">
@@ -36,14 +35,13 @@ export default function ModulesControls() {
                 </ul>
             </div>
 
-            <button id="wd-view-progress-btn" className="btn btn-lg btn-danger me-1 float-end">
+            <button id="wd-view-progress-btn" className="btn btn-lg btn-secondary me-1 float-end">
                 <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
                 View Progress</button>
 
-            <button id="wd-collapse-all-btn" className="btn btn-lg btn-danger me-1 float-end">
+            <button id="wd-collapse-all-btn" className="btn btn-lg btn-secondary me-1 float-end">
                 <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
                 Collapse all</button>
-            
         </div>
     );
 }

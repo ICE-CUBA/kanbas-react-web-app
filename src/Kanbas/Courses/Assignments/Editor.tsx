@@ -7,22 +7,15 @@ export default function AssignmentEditor() {
         <form>
           <div className="mb-3">
             <label htmlFor="wd-name" className="form-label">Assignment Name</label>
-            <input
-              type="text"
-              id="wd-name"
-              className="form-control"
-              defaultValue="A1 - ENV + HTML"
-            />
+            <input id="wd-name" type="text" className="form-control"
+              defaultValue="A1 - ENV + HTML"/>
           </div>
 
           <div className="mb-3">
             <label htmlFor="wd-description" className="form-label">Description</label>
-            <textarea
-              id="wd-description"
-              className="form-control"
+            <textarea id="wd-description" className="form-control"
               defaultValue="The assignment is available online. Submit a link to the landing page of your Web application running on Netlify..."
-              rows={3}
-            ></textarea>
+              rows={3}></textarea>
           </div>
 
           <div className="row mb-3">
@@ -65,50 +58,30 @@ export default function AssignmentEditor() {
               <div className="mt-3 border p-3">
                 <label>Online Entry Options</label>
                 <div className="form-check">
-                  <input
-                    type="checkbox"
-                    id="textEntry"
-                    className="form-check-input"
-                  />
+                  <input type="checkbox" id="textEntry" className="form-check-input"/>
                   <label htmlFor="textEntry" className="form-check-label">Text Entry</label>
                 </div>
                 <div className="form-check">
-                  <input
-                    type="checkbox"
-                    id="websiteURL"
-                    className="form-check-input"
-                  />
+                  <input id="websiteURL" type="checkbox" className="form-check-input"/>
                   <label htmlFor="websiteURL" className="form-check-label">Website URL</label>
                 </div>
                 <div className="form-check">
-                  <input
-                    type="checkbox"
-                    id="mediaRecordings"
-                    className="form-check-input"
-                  />
+                  <input id="mediaRecordings" type="checkbox"  className="form-check-input"/>
                   <label htmlFor="mediaRecordings" className="form-check-label">Media Recordings</label>
                 </div>
                 <div className="form-check">
-                  <input
-                    type="checkbox"
-                    id="studentAnnotation"
-                    className="form-check-input"
-                  />
+                  <input id="studentAnnotation" type="checkbox" className="form-check-input"/>
                   <label htmlFor="studentAnnotation" className="form-check-label">Student Annotation</label>
                 </div>
                 <div className="form-check">
-                  <input
-                    type="checkbox"
-                    id="fileUploads"
-                    className="form-check-input"
-                  />
+                  <input id="fileUploads" type="checkbox" className="form-check-input"/>
                   <label htmlFor="fileUploads" className="form-check-label">File Uploads</label>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="row mb-3" id="assignment-assign-container">
+          <div className="row mb-3">
             <div className="col-4 col-form-label text-end">
                 Assign
             </div>
