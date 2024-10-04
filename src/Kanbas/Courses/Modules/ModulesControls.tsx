@@ -8,9 +8,10 @@ export default function ModulesControls() {
                 Module</button>
             <div className="dropdown d-inline me-1 float-end">
                 <button id="wd-publish-all-btn" className="btn btn-lg btn-secondary dropdown-toggle"
-                    type="button" data-bs-toggle="dropdown">
-                    <GreenCheckmark />
-                    Publish All</button>
+                 data-bs-toggle="dropdown" aria-expanded="false">
+                        <GreenCheckmark />
+                        Publish All
+                </button>
                 <ul className="dropdown-menu">
                     <li>
                         <a id="wd-publish-all-modules-and-items-btn" className="dropdown-item" href="#">
