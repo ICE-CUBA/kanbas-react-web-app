@@ -4,9 +4,12 @@ import AssignmentButtons from "./assignmentButton";
 import { AiOutlineCaretDown } from "react-icons/ai";
 import { BsGripVertical } from "react-icons/bs";
 import { FaRegEdit } from "react-icons/fa";
-
+import { useParams } from "react-router";
+import * as db from "../../Database";
 
 export default function Assignments() {
+  const { cid } = useParams();
+  const assignments = db.assignments;
   return (
     <div id="wd-assignments" className="text-nowrap">
       <div className="d-flex flex-row mb-3 gap-3">
@@ -33,56 +36,26 @@ export default function Assignments() {
           </div>
         </li>
 
-        <li className="list-group-item d-flex align-items-center">
-          <BsGripVertical className="me-2 fs-3" />
+        {assignments.filter((assign) => assign.course === cid)
+            .map((assign: any) => (
+              <li key={assign._id} className="list-group-item d-flex align-items-center">
+              <BsGripVertical className="me-2 fs-3" />
           <FaRegEdit size={30} className="me-3 text-success" />
           <div className="flex-grow-1">
-            <a className="wd-assignment-link stretched-link" href="#/Kanbas/Courses/1234/Assignments/123">
-              A1
+            <a className="wd-assignment-link stretched-link" href={`#/Kanbas/Courses/${cid}/Assignments/${assign._id}`}>
+              {assign._id}
             </a>
             <p className="mb-0">
               <span className="text-danger">Multiple Modules</span> |
               <span className="fw-bold">Not available Until</span> |
-              <span>May 6 at 12:00am</span> |<br />
-              <span>Due May 13 at 11:59pm | 100 pts</span>
+              <span>{assign.available}</span> |<br />
+              <span>Due {assign.due} | {assign.points} pts</span>
             </p>
           </div>
           <LessonControlButtons />
         </li>
-
-        <li className="list-group-item d-flex align-items-center">
-          <BsGripVertical className="me-2 fs-3" />
-          <FaRegEdit size={30} className="me-3 text-success" />
-          <div className="flex-grow-1">
-            <a className="wd-assignment-link stretched-link" href="#/Kanbas/Courses/1234/Assignments/123">
-              A2
-            </a>
-            <p className="mb-0">
-              <span className="text-danger">Multiple Modules</span> |
-              <span className="fw-bold">Not available Until</span> |
-              <span>May 13 at 12:00am</span> |<br />
-              <span>Due May 20 at 11:59pm | 100 pts</span>
-            </p>
-          </div>
-          <LessonControlButtons />
-        </li>
-
-        <li className="list-group-item d-flex align-items-center">
-          <BsGripVertical className="me-2 fs-3" />
-          <FaRegEdit size={30} className="me-3 text-success" />
-          <div className="flex-grow-1">
-            <a className="wd-assignment-link stretched-link" href="#/Kanbas/Courses/1234/Assignments/123">
-              A3
-            </a>
-            <p className="mb-0">
-              <span className="text-danger">Multiple Modules</span> |
-              <span className="fw-bold">Not available Until</span> |
-              <span>May 20 at 12:00am</span> |<br />
-              <span>Due May 27 at 11:59pm | 100 pts</span>
-            </p>
-          </div>
-          <LessonControlButtons />
-        </li>
+              
+            ))}
       </ul>
 
     </div>
