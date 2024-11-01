@@ -2,14 +2,36 @@ import { FaPlus } from "react-icons/fa6";
 import LessonControlButtons from "../Modules/LessonControlButtons";
 import AssignmentButtons from "./assignmentButton";
 import { AiOutlineCaretDown } from "react-icons/ai";
-import { BsGripVertical } from "react-icons/bs";
+import { BsGripVertical, BsTrash } from "react-icons/bs";
 import { FaRegEdit } from "react-icons/fa";
 import { useParams } from "react-router";
-import * as db from "../../Database";
+import { Link } from "react-router-dom";
+import { Assignment, deleteAssignment } from "./reducer";
+import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
 
 export default function Assignments() {
   const { cid } = useParams();
-  const assignments = db.assignments;
+  const dispatch = useDispatch();
+  const [showDialog, setShowDialog] = useState(false);
+  const [selectedAssignment, setSelectedAssignment] = useState<string | null>(null);
+  const assignments = useSelector((state: any) => 
+    state.assignmentsReducer.assignments);
+
+  const handleDeleteClick = (e: React.MouseEvent, assignmentId: string) => {
+    e.preventDefault();
+    setSelectedAssignment(assignmentId);
+    setShowDialog(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (selectedAssignment) {
+      dispatch(deleteAssignment(selectedAssignment));
+      setShowDialog(false);
+      setSelectedAssignment(null);
+    }
+  };
+
   return (
     <div id="wd-assignments" className="text-nowrap">
       <div className="d-flex flex-row mb-3 gap-3">
@@ -19,9 +41,14 @@ export default function Assignments() {
         <button id="wd-view-progress-btn" className="btn btn-sm btn-white me-1 rounded-0">
           <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
           Group</button>
-        <button id="wd-collapse-all-btn" className="btn btn-sm btn-danger me-1 rounded-0">
-          <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
-          Assignment</button>
+        <div id="wd-new-assignment-btn">
+        <Link to={`/Kanbas/Courses/${cid}/Assignments/new`} className="wd-assignment-link">
+          <button id="wd-collapse-all-btn" className="btn btn-sm btn-danger me-1 rounded-0">
+            <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
+            Assignment
+          </button>
+        </Link>
+        </div>
       </div>
 
       <ul id="wd-assignments-title" className="mt-2 list-group rounded-0 w-100">
@@ -36,28 +63,59 @@ export default function Assignments() {
           </div>
         </li>
 
-        {assignments.filter((assign) => assign.course === cid)
-            .map((assign: any) => (
-              <li key={assign._id} className="list-group-item d-flex align-items-center">
+        {assignments
+          .filter((assign: Assignment) => assign.course === cid)
+          .map((assign: Assignment) => (
+            <li key={assign._id} className="list-group-item d-flex align-items-center">
               <BsGripVertical className="me-2 fs-3" />
-          <FaRegEdit size={30} className="me-3 text-success" />
-          <div className="flex-grow-1">
-            <a className="wd-assignment-link stretched-link" href={`#/Kanbas/Courses/${cid}/Assignments/${assign._id}`}>
-              {assign._id}
-            </a>
-            <p className="mb-0">
-              <span className="text-danger">Multiple Modules</span> |
-              <span className="fw-bold">Not available Until</span> |
-              <span>{assign.available}</span> |<br />
-              <span>Due {assign.due} | {assign.points} pts</span>
-            </p>
-          </div>
-          <LessonControlButtons />
-        </li>
-              
-            ))}
+              <FaRegEdit size={30} className="me-3 text-success" />
+              <div className="flex-grow-1">
+                <Link 
+                  to={`/Kanbas/Courses/${cid}/Assignments/${assign._id}`} 
+                  className="wd-assignment-link">
+                  {assign._id}
+                </Link>
+                <p className="mb-0">
+                    <span className="text-danger">Multiple Modules</span> |
+                    <span className="fw-bold">Not available Until</span> |
+                    <span>{assign.available}</span> |<br />
+                    <span>Due {assign.due} | {assign.points} pts</span>
+                </p>
+              </div>
+              <button 
+                className="btn btn-danger me-2"
+                onClick={(e) => handleDeleteClick(e, assign._id)}
+              >
+                <BsTrash />
+              </button>
+              <LessonControlButtons />
+            </li>
+          ))}
       </ul>
 
-    </div>
+      {showDialog && (
+        <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Confirm Delete</h5>
+                <button type="button" className="btn-close" onClick={() => setShowDialog(false)}></button>
+              </div>
+              <div className="modal-body">
+                Are you sure you want to delete this assignment?
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={() => setShowDialog(false)}>
+                  Cancel
+                </button>
+                <button type="button" className="btn btn-danger" onClick={handleConfirmDelete}>
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div >
   );
 }
