@@ -6,9 +6,11 @@ import { BsGripVertical, BsTrash } from "react-icons/bs";
 import { FaRegEdit } from "react-icons/fa";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { Assignment, deleteAssignment } from "./reducer";
+import { Assignment, addAssignment, 
+  deleteAssignment, updateAssignment, editAssignment, setAssignment } from "./reducer";
 import { useSelector, useDispatch } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import * as assignmentsClient from "./client";
 
 export default function Assignments() {
   const { cid } = useParams();
@@ -24,13 +26,22 @@ export default function Assignments() {
     setShowDialog(true);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (selectedAssignment) {
-      dispatch(deleteAssignment(selectedAssignment));
-      setShowDialog(false);
-      setSelectedAssignment(null);
+        await assignmentsClient.deleteAssignment(selectedAssignment);
+        dispatch(deleteAssignment(selectedAssignment));
+        setShowDialog(false);
+        setSelectedAssignment(null);
     }
   };
+  const fetchAssignments = async () => {
+    const assignments = await assignmentsClient.findAssignmentsForCourse(cid as string);
+    dispatch(setAssignment(assignments));
+  };
+  useEffect(() => {
+    fetchAssignments();
+  }, []);
+
 
   return (
     <div id="wd-assignments" className="text-nowrap">
@@ -64,7 +75,7 @@ export default function Assignments() {
         </li>
 
         {assignments
-          .filter((assign: Assignment) => assign.course === cid)
+          //.filter((assign: Assignment) => assign.course === cid)
           .map((assign: Assignment) => (
             <li key={assign._id} className="list-group-item d-flex align-items-center">
               <BsGripVertical className="me-2 fs-3" />
@@ -73,7 +84,7 @@ export default function Assignments() {
                 <Link 
                   to={`/Kanbas/Courses/${cid}/Assignments/${assign._id}`} 
                   className="wd-assignment-link">
-                  {assign._id}
+                  {assign.title}
                 </Link>
                 <p className="mb-0">
                     <span className="text-danger">Multiple Modules</span> |

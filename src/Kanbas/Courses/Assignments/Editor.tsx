@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
-import { addAssignment, updateAssignment } from "./reducer";
 import { Link } from "react-router-dom";
+import { addAssignment, updateAssignment, editAssignment } from "./reducer";
+import * as assignmentsClient from "./client";
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams();
@@ -11,6 +12,7 @@ export default function AssignmentEditor() {
   const assignments = useSelector((state: any) => state.assignmentsReducer.assignments);
   
   const defaultAssignment = {
+    _id: "",
     title: "",
     course: cid,
     points: 100,
@@ -32,7 +34,7 @@ export default function AssignmentEditor() {
     endDate: assignment?.endDate || "",
   });
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     
     const formatDate = (date: string) => {
@@ -41,16 +43,18 @@ export default function AssignmentEditor() {
       return `${d.toLocaleString('default', { month: 'short' })} ${d.getDate()} at ${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}${d.getHours() >= 12 ? 'pm' : 'am'}`;
     };
 
-    const updatedAssignment = {
+    const updatedAssignments = {
       ...formData,
       available: formatDate(formData.startDate),
       due: formatDate(formData.endDate),
     };
 
     if (aid === "new") {
-      dispatch(addAssignment(updatedAssignment));
+      await assignmentsClient.createAssignment(cid as string, updatedAssignments);
+      dispatch(addAssignment(updatedAssignments));
     } else {
-      dispatch(updateAssignment(updatedAssignment));
+      await assignmentsClient.updateAssignment(aid as string, updatedAssignments);
+      dispatch(updateAssignment(updatedAssignments));
     }
     navigate(`/Kanbas/Courses/${cid}/Assignments`);
   };

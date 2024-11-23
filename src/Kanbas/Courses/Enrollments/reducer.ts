@@ -27,9 +27,13 @@ const enrollmentsSlice = createSlice({
           !(enrollment.user === action.payload.userId && 
             enrollment.course === action.payload.courseId)
       );
+    },
+    
+    setEnrollments: (state, action) => {
+      state.enrollments = action.payload;
     }
   }
 });
 
-export const { toggleShowAllCourses, enrollStudent, unenrollStudent } = enrollmentsSlice.actions;
+export const { toggleShowAllCourses, enrollStudent, unenrollStudent, setEnrollments } = enrollmentsSlice.actions;
 export default enrollmentsSlice.reducer;
