@@ -1,8 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { enrollments } from "../../Database";
+// import { enrollments } from "../../Database";
+
+interface Enrollment {
+  _id: string;
+  user: string;
+  course: string;
+}
 
 const initialState = {
-  enrollments: enrollments,
+  enrollments: [] as Enrollment[],
   showAllCourses: false
 };
 
@@ -10,6 +16,10 @@ const enrollmentsSlice = createSlice({
   name: "enrollments",
   initialState,
   reducers: {
+    setEnrollments: (state, action) => {
+      state.enrollments = action.payload;
+    },
+
     toggleShowAllCourses: (state) => {
       state.showAllCourses = !state.showAllCourses;
     },
@@ -28,10 +38,6 @@ const enrollmentsSlice = createSlice({
             enrollment.course === action.payload.courseId)
       );
     },
-    
-    setEnrollments: (state, action) => {
-      state.enrollments = action.payload;
-    }
   }
 });
 

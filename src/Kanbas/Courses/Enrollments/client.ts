@@ -16,8 +16,3 @@ export const fetchEnrollmentsForUser = async (userId: string) => {
     const response = await axios.get(`${ENROLLMENTS_API}/${userId}`);
     return response.data;
 };
-
-export const fetchAllCourses = async () => {
-    const response = await axios.get(`${ENROLLMENTS_API}/courses`);
-    return response.data;
-};

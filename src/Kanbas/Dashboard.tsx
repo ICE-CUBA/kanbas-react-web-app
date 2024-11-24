@@ -5,9 +5,9 @@ import { toggleShowAllCourses, enrollStudent, unenrollStudent, setEnrollments } 
 import * as enrollmentClient from "./Courses/Enrollments/client";
 
 export default function Dashboard(
-  { courses, course, setCourse, addNewCourse,
+  { allCourses, courses, course, setCourse, addNewCourse,
     deleteCourse, updateCourse }: {
-      courses: any[]; course: any; setCourse: (course: any) => void;
+      allCourses: any[]; courses: any[]; course: any; setCourse: (course: any) => void;
       addNewCourse: () => void; deleteCourse: (course: any) => void;
       updateCourse: () => void;
     }) {
@@ -62,6 +62,8 @@ export default function Dashboard(
       dispatch(enrollStudent({ userId: currentUser._id, courseId }));
     }
   };
+
+  const displayedAllCourses = allCourses;
 
   const displayedCourses = showAllCourses || currentUser.role !== "STUDENT"
     ? courses
@@ -122,7 +124,7 @@ export default function Dashboard(
       <h2>Published Courses ({displayedCourses.length})</h2>
       <hr />
       <div className="row row-cols-1 row-cols-md-3 g-4">
-        {displayedCourses.map((course) => (
+        {displayedAllCourses.map((course) => (
           <div key={course._id} className="col">
             <div className="card h-100">
               <img src={`/images/${course.image}`} className="card-img-top"
