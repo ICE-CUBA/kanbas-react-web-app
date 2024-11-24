@@ -26,17 +26,28 @@ export default function Kanbas() {
   const addNewCourse = async () => {
     const newCourse = await userClient.createCourse(course);
     setCourses([ ...courses, newCourse ]);
+    setAllCourses([ ...allCourses, newCourse ]);
   };
 
   const deleteCourse = async (courseId: string) => {
     const status = await courseClient.deleteCourse(courseId);
     setCourses(courses.filter((course) => course._id !== courseId));
+    setAllCourses(allCourses.filter((course) => course._id !== courseId));
   };
 
   const updateCourse = async () => {
     await courseClient.updateCourse(course);
     setCourses(
       courses.map((c) => {
+        if (c._id === course._id) {
+          return course;
+        } else {
+          return c;
+        }
+      })
+    );
+    setAllCourses(
+      allCourses.map((c) => {
         if (c._id === course._id) {
           return course;
         } else {

@@ -23,6 +23,7 @@ const enrollmentsSlice = createSlice({
     toggleShowAllCourses: (state) => {
       state.showAllCourses = !state.showAllCourses;
     },
+    
     enrollStudent: (state, action) => {
       const newEnrollment = {
         _id: new Date().getTime().toString(),

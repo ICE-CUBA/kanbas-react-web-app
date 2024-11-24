@@ -86,7 +86,7 @@ export default function Dashboard(
     <div id="wd-dashboard">
       <div className="d-flex justify-content-between align-items-center">
         <h1 id="wd-dashboard-title">Dashboard</h1>
-        {currentUser.role === "STUDENT" && (
+        
           <button
             className="btn btn-primary"
             style={{
@@ -101,7 +101,7 @@ export default function Dashboard(
           >
             {showAllCourses ? "Show Enrolled" : "Show All Courses"}
           </button>
-        )}
+        
       </div>
       <hr />
 
@@ -121,10 +121,10 @@ export default function Dashboard(
         </>
       )}
 
-      <h2>Published Courses ({displayedCourses.length})</h2>
+      <h2>Published Courses ({(showAllCourses ? displayedCourses : displayedAllCourses).length})</h2>
       <hr />
       <div className="row row-cols-1 row-cols-md-3 g-4">
-        {displayedAllCourses.map((course) => (
+        {(showAllCourses ? displayedCourses : displayedAllCourses).map((course) => (
           <div key={course._id} className="col">
             <div className="card h-100">
               <img src={`/images/${course.image}`} className="card-img-top"
@@ -143,14 +143,14 @@ export default function Dashboard(
                   >
                     View
                   </button>
-                  {currentUser.role === "STUDENT" && (
+                  
                     <button
                       className={`btn ${isEnrolled(course._id) ? 'btn-danger' : 'btn-success'}`}
                       onClick={() => handleEnrollment(course._id)}
                     >
                       {isEnrolled(course._id) ? 'Unenroll' : 'Enroll'}
                     </button>
-                  )}
+                  
                   {currentUser.role === "FACULTY" && (
                     <div>
                       <button
