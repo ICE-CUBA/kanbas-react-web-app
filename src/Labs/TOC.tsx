@@ -50,6 +50,11 @@ export default function TOC() {
           My GitHub
         </a>
       </li>
+      <li className="nav-item">
+        <a id="wd-k" href="https://github.com/ICE-CUBA/kanbas-node-server-app.git" target="_blank" className="nav-link">
+          Server
+        </a>
+      </li>
     </ul>
   );
 }
