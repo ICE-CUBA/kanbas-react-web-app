@@ -31,7 +31,7 @@ export default function AccountNavigation() {
           Profile
         </Link>
       )}
-      {currentUser && currentUser.role === "ADMIN" && (
+      {currentUser && currentUser.role === "FACULTY" && (
           <Link to={`/Kanbas/Account/Users`} className={`list-group-item ${active("Users")} text-danger border border-0`}> Users </Link> )}
     </div>
   );

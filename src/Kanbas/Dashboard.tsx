@@ -1,111 +1,40 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { toggleShowAllCourses, enrollStudent, unenrollStudent, setEnrollments } from "./Courses/Enrollments/reducer";
-import * as enrollmentClient from "./Courses/Enrollments/client";
 
 export default function Dashboard(
-  { allCourses, courses, course, setCourse, addNewCourse,
-    deleteCourse, updateCourse }: {
-      allCourses: any[]; courses: any[]; course: any; setCourse: (course: any) => void;
-      addNewCourse: () => void; deleteCourse: (course: any) => void;
-      updateCourse: () => void;
+  { courses, course, setCourse, addNewCourse,
+    deleteCourse, updateCourse, enrolling, setEnrolling, updateEnrollment }: {
+      courses: any[], 
+      course: any, 
+      setCourse: (course: any) => void, 
+      addNewCourse: () => void,
+      deleteCourse: (course: any) => void, 
+      updateCourse: () => void, 
+      enrolling: boolean, 
+      setEnrolling: (enrolling: boolean) => void, 
+      updateEnrollment: (courseId: string, enrolled: boolean) => Promise<void>
     }) {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const enrollmentState = useSelector((state: any) => state.enrollmentsReducer);
-  const { enrollments, showAllCourses } = enrollmentState || { enrollments: [], showAllCourses: false };
-  
-  useEffect(() => {
-    const fetchUserEnrollments = async () => {
-      try {
-        const fetchedEnrollments = await enrollmentClient.fetchEnrollmentsForUser(currentUser._id);
-        dispatch(setEnrollments(fetchedEnrollments));
-      } catch (error) {
-        console.error("Failed to fetch enrollments:", error);
-      }
-    };
-    if (currentUser && currentUser._id) {
-      fetchUserEnrollments();
-    }
-  }, [currentUser, dispatch]);
 
   const handleCourseClick = (courseId: string) => {
-    if (currentUser.role === "STUDENT") {
-      const isEnrolled = enrollments.some(
-        (enrollment: any) =>
-          enrollment.user === currentUser._id &&
-          enrollment.course === courseId
-      );
-      if (!isEnrolled) {
-        return;
-      }
-    }
     navigate(`/Kanbas/Courses/${courseId}/Home`);
   };
-
-  const isEnrolled = (courseId: string) => {
-    return enrollments.some(
-      (enrollment: any) =>
-        enrollment.user === currentUser._id &&
-        enrollment.course === courseId
-    );
-  };
-
-  const handleEnrollment = async (courseId: string) => {
-    if (isEnrolled(courseId)) {
-      await enrollmentClient.unenrollUser(currentUser._id, courseId);
-      dispatch(unenrollStudent({ userId: currentUser._id, courseId }));
-    } else {
-      await enrollmentClient.enrollUser(currentUser._id, courseId);
-      dispatch(enrollStudent({ userId: currentUser._id, courseId }));
-    }
-  };
-
-  const displayedAllCourses = allCourses;
-
-  const displayedCourses = showAllCourses || currentUser.role !== "STUDENT"
-    ? courses
-    : courses.filter((course) =>
-      enrollments.some(
-        (enrollment: any) =>
-          enrollment.user === currentUser._id &&
-          enrollment.course === course._id
-      )
-    );
-
-  useEffect(() => {
-    const fetchUserEnrollments = async () => {
-      const enrollments = await enrollmentClient.fetchEnrollmentsForUser(currentUser._id);
-    };
-    fetchUserEnrollments();
-  }, [currentUser]);
 
   return (
     <div id="wd-dashboard">
       <div className="d-flex justify-content-between align-items-center">
-        <h1 id="wd-dashboard-title">Dashboard</h1>
-        
-          <button
-            className="btn btn-primary"
-            style={{
-              backgroundColor: '#0d6efd',
-              borderColor: '#0d6efd',
-              color: 'white',
-              fontWeight: 'bold',
-              padding: '8px 16px',
-              borderRadius: '4px'
-            }}
-            onClick={() => dispatch(toggleShowAllCourses())}
-          >
-            {showAllCourses ? "Show Enrolled" : "Show All Courses"}
-          </button>
-        
+        <h1 id="wd-dashboard-title">
+          Dashboard
+        </h1>
+        <button onClick={() => setEnrolling(!enrolling)} className="float-end btn btn-primary" >
+          {enrolling ? "My Courses" : "All Courses"}
+        </button>
       </div>
       <hr />
 
-      {currentUser.role === "FACULTY" && (
+      {(currentUser?.role === "FACULTY") && (
         <>
           <h5>New Course
             <button className="btn btn-primary float-end"
@@ -121,10 +50,10 @@ export default function Dashboard(
         </>
       )}
 
-      <h2>Published Courses ({(showAllCourses ? displayedCourses : displayedAllCourses).length})</h2>
+      <h2>Published Courses ({courses.length})</h2>
       <hr />
       <div className="row row-cols-1 row-cols-md-3 g-4">
-        {(showAllCourses ? displayedCourses : displayedAllCourses).map((course) => (
+        {courses.map((course) => (
           <div key={course._id} className="col">
             <div className="card h-100">
               <img src={`/images/${course.image}`} className="card-img-top"
@@ -143,15 +72,19 @@ export default function Dashboard(
                   >
                     View
                   </button>
-                  
-                    <button
-                      className={`btn ${isEnrolled(course._id) ? 'btn-danger' : 'btn-success'}`}
-                      onClick={() => handleEnrollment(course._id)}
-                    >
-                      {isEnrolled(course._id) ? 'Unenroll' : 'Enroll'}
+
+                  {enrolling && (
+                    <button onClick={(event) => {
+                      event.preventDefault();
+                      updateEnrollment(course._id, !course.enrolled);
+                    }}
+                      className={`btn ${course.enrolled ? "btn-danger" : "btn-success"} float-end`}
+                       >
+                      {course.enrolled ? "Unenroll" : "Enroll"}
                     </button>
-                  
-                  {currentUser.role === "FACULTY" && (
+                  )}
+
+                  {(currentUser?.role === "FACULTY") && (
                     <div>
                       <button
                         className="btn btn-warning me-2"

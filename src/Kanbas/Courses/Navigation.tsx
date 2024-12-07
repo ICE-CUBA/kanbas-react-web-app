@@ -7,8 +7,15 @@ export default function CoursesNavigation() {
   return (
     <div id="wd-courses-navigation" className="wd list-group fs-5 rounded-0">
       {links.map((course) => (
-            <Link id={`"wd-course-${course}-link"`}    to={`/Kanbas/Courses/${cid}/${course}`}
-            className={`list-group-item border border-0 ${pathname.includes(course) ? "text-black" : "text-danger"}`}>{course}</Link>
-          ))}
+        <Link 
+          key={course}
+          id={`wd-course-${course}-link`}
+          to={`/Kanbas/Courses/${cid}/${course}`}
+          className={`list-group-item border border-0 ${pathname.includes(course) ? "text-black" : "text-danger"}`}
+        >
+          {course}
+        </Link>
+      ))}
     </div>
-    );}
+  );
+}
